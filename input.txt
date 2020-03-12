@@ -1,0 +1,14 @@
+EHLO example.com
+AUTH LOGIN
+NDZhYTc5MTViNGY4ZmM5OWJiNTZiZmRmZDI5YTRkMWUK
+M2FlMThmMWU4ZTQ0MzhhNTk4NGRjMGRiODdiNTJmOTAK
+MAIL FROM: alice@example.com
+RCPT TO: bob@example.com
+DATA
+From: "Alice Adams" <alice@example.com>
+To: "Bob Brown" <bob@example.com>
+Subject: Testing
+
+This message is testing the Amazon SES SMTP interface.
+.
+QUIT

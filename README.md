@@ -14,6 +14,9 @@ Contents:
 
 * [Documentation](#documentation)
 * [Security and TLS](#security-and-tls)
+* [Encode SMTP username and SMTP password](#encode-smtp-username-and-smtp-password)
+* [AUTH LOGIN](#auth-login)
+* [Message example](#message-example)
 * [Connect](#connect)
 
 
@@ -32,6 +35,56 @@ For security, we prefer port 465 with implicit TLS encryption, rather than port 
 
 https://www.fastmail.com/help/technical/ssltlsstarttls.html
 
+
+## Encode SMTP username and SMTP password
+
+We need to base64 encode the SMTP creditials, which are our SMTP username (i.e. AWS Access Key Id) and SMTP password (i.e. AWS Secret Access Key). 
+
+Example fake credentials:
+
+* AWS Access Key Id: BFDXL10M7DB052E3IGZ0
+
+* AWS Secret Access Key: nzW10krHBW2Wdj9Qk+VoGe8HrLVdIU8IDUyeqDxE
+
+Example encoding via the command `base64`:
+
+```sh
+$ echo -n "BFDXL10M7DB052E3IGZ0" | base64
+QkZEWEwxME03REIwNTJFM0lHWjAK
+
+$ echo -n "nzW10krHBW2Wdj9Qk+VoGe8HrLVdIU8IDUyeqDxE" | base64
+bnpXMTBrckhCVzJXZGo5UWsrVm9HZThIckxWZElVOElEVXllcUR4RQo=
+```
+
+Example encoding via the command `openssl`:
+
+```sh
+$ echo -n "BFDXL10M7DB052E3IGZ0" | openssl enc -base64
+QkZEWEwxME03REIwNTJFM0lHWjAK
+
+$ echo -n "nzW10krHBW2Wdj9Qk+VoGe8HrLVdIU8IDUyeqDxE" | openssl enc -base64
+bnpXMTBrckhCVzJXZGo5UWsrVm9HZThIckxWZElVOElEVXllcUR4RQo=
+```
+
+## AUTH LOGIN
+
+When we connect to AWS SES, we must send the command "AUTH LOGIN", then our authentication credentials.
+
+Example command with fake credentials:
+
+```sh
+AUTH LOGIN
+QkZEWEwxME03REIwNTJFM0lHWjAK
+bnpXMTBrckhCVzJXZGo5UWsrVm9HZThIckxWZElVOElEVXllcUR4RQo=
+```
+
+## Message example
+
+This repo has a file `message.txt` that is a message example.
+
+The file has the AUTH LOGIN (as above) and the fake example credentials (as above).
+
+When you are ready to try the next step, to connect to AWS, you need to edit the file to replace the fake credentials with your real credentials.
 
 
 ## Connect
@@ -69,3 +122,7 @@ verify return:1
 354 End data with <CR><LF>.<CR><LF>
 250 Ok 01000170d10e6a6c-71c65177-ce88-4135-9258-48c0e8bf916d-000000
 ```
+
+The final line starts with the result code "250 Ok" which means AWS SES accepeted the message.
+
+The final line then show the message id.
